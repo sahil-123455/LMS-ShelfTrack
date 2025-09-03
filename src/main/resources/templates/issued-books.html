@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Issued Books</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, rgba(30, 30, 40, 0.9), rgba(15, 15, 20, 0.9)), 
+                        url('/images/library-bg.jpg') no-repeat center center/cover;
+            color: #E0E0E0;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #34D399;
+            font-weight: 700;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            margin: 0;
+        }
+
+        .navbar ul li a {
+            text-decoration: none;
+            color: #E0E0E0;
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            border: 1px solid transparent;
+        }
+
+        .navbar ul li a:hover {
+            background: rgba(52, 211, 153, 0.2);
+            color: #34D399;
+            border-color: #34D399;
+        }
+
+        .content {
+            padding: 60px;
+            text-align: center;
+        }
+
+        .content h2 {
+            font-size: 42px;
+            margin-bottom: 40px;
+            color: #fff;
+            font-weight: 800;
+            animation: slideInDown 1s ease-in-out;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 15px;
+            background: rgba(40, 40, 50, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease-in-out 0.8s;
+            animation-fill-mode: forwards;
+            opacity: 0;
+        }
+
+        th, td {
+            padding: 20px;
+            text-align: left;
+        }
+
+        th {
+            background: #2D3748;
+            color: #A0AEC0;
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        th:first-child { border-top-left-radius: 15px; }
+        th:last-child { border-top-right-radius: 15px; }
+
+        tr {
+            transition: background 0.3s ease-in-out;
+        }
+        tr:hover {
+            background: rgba(52, 211, 153, 0.1);
+        }
+        td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .action-btns a {
+            color: #E0E0E0;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+        }
+        .action-btns .btn-return {
+            background-color: #34D399;
+            color: #121212;
+            font-weight: 600;
+        }
+        .action-btns .btn-return:hover {
+            background-color: #23a876;
+            transform: translateY(-2px);
+        }
+        .action-btns .btn-returned {
+            background-color: #A0AEC0;
+            color: #121212;
+            cursor: not-allowed;
+            font-weight: 600;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background-color: rgba(248, 113, 113, 0.2);
+            border-color: rgba(255, 75, 75, 0.5);
+            color: #F87171;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>📚 ShelfTrack</h1>
+        <ul>
+            <li><a th:href="@{/dashboard}">Dashboard</a></li>
+            <li><a th:href="@{/books}">Books</a></li>
+            <li><a th:href="@{/students}">Students</a></li>
+            <li><a th:href="@{/issued-books}">Issued Books</a></li>
+            <li><a th:href="@{/defaulters}">Defaulter List</a></li>
+            <li><a th:href="@{/logout}">Logout</a></li>
+        </ul>
+    </nav>
+    <div class="content">
+        <h2>Issued Books</h2>
+        
+        <div th:if="${fineAmount}" class="alert" role="alert">
+            <p><strong>Heads Up!</strong> A fine of ₹<span th:text="${fineAmount}"></span> has been charged to <span th:text="${studentName}"></span> for the late return of the book: <strong><span th:text="${bookTitle}"></span></strong>.</p>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Book Title</th>
+                    <th>Issued To</th>
+                    <th>Student ID</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="issue : ${issues}">
+                    <td th:text="${issue.id}"></td>
+                    <td th:text="${issue.book.title}"></td>
+                    <td th:text="${issue.student.name}"></td>
+                    <td th:text="${issue.student.studentId}"></td>
+                    <td th:text="${issue.issueDate}"></td>
+                    <td th:text="${issue.dueDate}"></td>
+                    <td th:text="${issue.returnDate}"></td>
+                    <td>
+                        <span th:if="${issue.returned}" style="color: #34D399; font-weight: bold;">Returned</span>
+                        <span th:unless="${issue.returned}" style="color: #F87171; font-weight: bold;">Issued</span>
+                        <span th:if="${issue.returnDate != null && issue.dueDate != null && issue.returnDate.isAfter(issue.dueDate)}" class="fine-text"> (Late)</span>
+                    </td>
+                    <td class="action-btns">
+                        <a th:if="${!issue.returned}" th:href="@{'/books/return/' + ${issue.id}}" class="btn-return">Return Book</a>
+                        <span th:if="${issue.returned}" class="btn-returned">Returned</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

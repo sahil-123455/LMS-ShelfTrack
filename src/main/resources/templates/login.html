@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, rgba(30, 30, 40, 0.9), rgba(15, 15, 20, 0.9)), 
+                        url('/images/library-bg.jpg') no-repeat center center/cover;
+            color: #E0E0E0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .auth-container {
+            background: rgba(40, 40, 50, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            width: 380px;
+            animation: fadeInUp 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-container h2 {
+            margin-bottom: 25px;
+            font-size: 28px;
+            color: #34D399;
+            font-weight: 700;
+        }
+        
+        .auth-container p {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .auth-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .auth-container input {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #E0E0E0;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .auth-container input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .auth-container input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #34D399;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-container button {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: #34D399;
+            color: #121212;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .auth-container button:hover {
+            background: #23a876;
+            transform: translateY(-2px);
+        }
+
+        .auth-container a {
+            color: #34D399;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .auth-container a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #F87171;
+            margin-top: 15px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+<div class="auth-container">
+    <h2>Welcome Back</h2>
+    <form th:action="@{/login}" th:object="${user}" method="post">
+        <input type="text" style="display:none;" />
+        <input type="password" style="display:none;" />
+        <input type="email" th:field="*{email}" placeholder="Email" required />
+        <input type="password" th:field="*{password}" placeholder="Password" required />
+        <button type="submit">Login</button>
+    </form>
+    <p th:if="${error}" th:text="${error}" class="error-message"></p>
+    <p>Don’t have an account? <a th:href="@{/register}">Register here</a></p>
+</div>
+</body>
+</html>

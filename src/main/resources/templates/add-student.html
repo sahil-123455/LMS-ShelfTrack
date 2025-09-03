@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a New Student</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, rgba(30, 30, 40, 0.9), rgba(15, 15, 20, 0.9)), 
+                        url('/images/library-bg.jpg') no-repeat center center/cover;
+            color: #E0E0E0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #34D399;
+            font-weight: 700;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            margin: 0;
+        }
+
+        .navbar ul li a {
+            text-decoration: none;
+            color: #E0E0E0;
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            border: 1px solid transparent;
+        }
+
+        .navbar ul li a:hover {
+            background: rgba(52, 211, 153, 0.2);
+            color: #34D399;
+            border-color: #34D399;
+        }
+        
+        .form-container {
+            background: rgba(40, 40, 50, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            width: 400px;
+            animation: fadeInUp 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-container h2 {
+            margin-bottom: 25px;
+            font-size: 28px;
+            color: #34D399;
+            font-weight: 700;
+        }
+        
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: #A0AEC0;
+        }
+
+        .form-group input {
+            width: 90%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #E0E0E0;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .form-group input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #34D399;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-container button {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: #34D399;
+            color: #121212;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            margin-top: 20px;
+        }
+
+        .form-container button:hover {
+            background: #23a876;
+            transform: translateY(-2px);
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+            }
+            .navbar ul {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+            }
+            .form-container {
+                width: 90%;
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>📚 ShelfTrack</h1>
+        <ul>
+            <li><a th:href="@{/dashboard}">Dashboard</a></li>
+            <li><a th:href="@{/books}">Books</a></li>
+            <li><a th:href="@{/students}">Students</a></li>
+            <li><a th:href="@{/issued-books}">Issued Books</a></li>
+            <li><a th:href="@{/defaulters}">Defaulter List</a></li>
+            <li><a th:href="@{/logout}">Logout</a></li>
+        </ul>
+    </nav>
+    <div class="form-container">
+        <h2>Add a New Student</h2>
+        <form th:action="@{/students/save}" th:object="${student}" method="post">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" th:field="*{name}" required />
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" th:field="*{email}" required />
+            </div>
+            <div class="form-group">
+                <label for="studentId">Student ID:</label>
+                <input type="text" id="studentId" th:field="*{studentId}" required />
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" th:field="*{phone}" required />
+            </div>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</body>
+</html>
