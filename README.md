@@ -18,11 +18,11 @@ Dynamic Dashboards: Separate, real-time dashboards for both ADMIN and USER roles
 Responsive UI: A modern, consistent, and responsive design that works flawlessly on desktop and mobile devices.
 
 💻 Tech Stack
-Backend:
+Backend: Spring Boot, Spring Data JPA, Hibernate, MySQL
 
-Frontend:
+Frontend: Thymeleaf (HTML5), CSS3, JavaScript
 
-Database:
+Deployment: Git, GitHub, Render
 
-Build Tool:
+Build Tool: Maven
 
